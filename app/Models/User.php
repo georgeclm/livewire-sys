@@ -55,4 +55,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Chat::class, 'sender');
     }
+
+    public function unread_chats($receiver_user_id)
+    {
+        return Chat::where('sender', $receiver_user_id)->whereIn('receiver', [auth()->id(), $receiver_user_id])
+            ->where('read', 0)
+            ->count();
+    }
+
+    // public function chats($receiver_user_id)
+    // {
+    //     # code...
+    // }
 }

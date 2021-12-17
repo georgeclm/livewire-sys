@@ -12,6 +12,7 @@ class Tickets extends Component
     public $active;
     public $activeUser;
     public $searchUser = '';
+    public $userIds;
 
     protected $listeners = ['ticketSelected', 'userSelected', 'refreshTicketView'];
 
@@ -30,16 +31,21 @@ class Tickets extends Component
         $this->activeUser = $userId;
     }
 
+
+    public function mount()
+    {
+        $chats = Chat::where('sender', auth()->id())->orWhere('receiver', auth()->id());
+        $this->userIds = array_unique(array_merge($chats->pluck('sender')->toArray(), $chats->pluck('receiver')->toArray()));
+    }
+
     public function render()
     {
         $users = User::where('id', '!=', auth()->id());
         $users = $users->when($this->searchUser != '', function ($query) {
             $query->where('name', 'LIKE', "%{$this->searchUser}%");
         });
-        $chats = Chat::where('sender', auth()->id())->orWhere('receiver', auth()->id());
-        $userIds = array_unique(array_merge($chats->pluck('sender')->toArray(), $chats->pluck('receiver')->toArray()));
-        if ($this->searchUser == '' && !empty($userIds)) {
-            $users = $users->whereIn('id', $userIds);
+        if ($this->searchUser == '' && !empty($this->userIds)) {
+            $users = $users->whereIn('id', $this->userIds);
         }
         $users = $users->get();
         return view('livewire.tickets', compact('users'));

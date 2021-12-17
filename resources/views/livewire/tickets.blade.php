@@ -4,25 +4,22 @@
         wire:model.debounce.500ms="searchUser">
     @foreach ($users as $user)
         @php
-            $chats = App\Models\Chat::where(function ($query) {
-                $query->where('sender', auth()->id())->orWhere('receiver', auth()->id());
-            })->where(function ($query) use ($user) {
-                $query->where('sender', $user->id)->orWhere('receiver', $user->id);
-            });
-            $chats_unread = clone $chats;
-            $unread = $chats_unread
-                ->where('sender', $user->id)
-                ->where('read', 0)
-                ->count();
+            $chats = App\Models\Chat::whereIn('sender', [auth()->id(), $user->id])->whereIn('receiver', [auth()->id(), $user->id]);
+            $unread = $user->unread_chats($user->id);
             $last_chat = $chats->latest()->first();
         @endphp
         <div class="rounded border shadow p-3 my-1 {{ $activeUser == $user->id ? 'bg-secondary' : '' }}"
             wire:click="$emit('userSelected',{{ $user->id }})">
-            <p class="text-gray-800">{{ $user->name }}
-                @if ($unread != 0)
-                    <span class="badge badge-success">{{ $unread }}</span>
-                @endif
-            </p>
+            <div class="d-flex justify-content-between">
+                <div class="text-gray-800">{{ $user->name }}
+                    @if ($unread != 0)
+                        <span class="badge badge-success">{{ $unread }}</span>
+                    @endif
+                </div>
+                <div>
+                    {{ $last_chat->created_at->toDateString() == now()->toDateString() ? $last_chat->created_at->format('G:i') : $transaction->created_at->format('Y-m-d') }}
+                </div>
+            </div>
             <div class="row mx-auto">
                 @if (@$last_chat->the_sender->id == auth()->id())
                     @if ($last_chat->read == 1)

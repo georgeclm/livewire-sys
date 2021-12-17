@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Chat;
 use App\Models\Comment;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -47,14 +48,15 @@ class Comments extends Component
 
     public function render()
     {
-        $chats = Chat::where(function ($query) {
-            $query->where('sender', auth()->id())->orWhere('receiver', auth()->id());
-        })->where(function ($query) {
-            $query->where('sender', $this->userId)->orWhere('receiver', $this->userId);
-        })->oldest()->get();
+        $dates = Chat::whereIn('sender', [auth()->id(), $this->userId])->whereIn('receiver', [auth()->id(), $this->userId])
+            ->oldest()
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->created_at)->format('Y-m-d'); // grouping by months
+            });
+        // dd($dates);
         $this->emit('refreshTicketView');
-        // $chats = $chats->where('sender', $this->userId)->orWhere('receiver', $this->userId)->latest()->get();
-        return view('livewire.comments', compact('chats'));
+        return view('livewire.comments', compact('dates'));
     }
     // this updated function will always be called in updated validation real time check the newComment Field
     public function updated($field)
@@ -76,7 +78,6 @@ class Comments extends Component
         $this->newComment = '';
         $this->image = '';
         $this->emit('scrollToBottom');
-        // session()->flash('message', 'Comment added successfully');
     }
 
     public function storeImage()

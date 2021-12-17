@@ -11,17 +11,21 @@
 
 
     <div style="height:455px; overflow-y:auto" id="chat-container">
-        @foreach ($chats as $chat)
+        {{-- @foreach ($chats as $chat)
             @php
                 if ($chat->the_receiver->id == auth()->id()) {
                     $chat->read = 1;
                     $chat->save();
                 }
             @endphp
+            @if ($chat->created_at->toDateString() == now()->toDateString())
+                <div class="rounded border shadow p-3 my-2">
+                    <p class="text-gray-800">Today</p>
+                </div>
+            @endif
             <div class="rounded border shadow p-3 my-2 @if ($chat->the_sender->id == auth()->id()) bg-teal-green  @endif">
                 <div class="d-flex float-right">
                     <div class="flex-grow-1"></div>
-                    {{-- <p class="font-bold text-lg">{{ $chat->the_sender->name }}</p> --}}
                     <small>{{ $chat->created_at->format('G:i') }} </small>
                     @if ($chat->the_sender->id == auth()->id())
                         @if ($chat->read == 1)
@@ -32,12 +36,43 @@
                     @endif
                 </div>
                 <p class="text-gray-800">{{ $chat->text }}</p>
-                {{-- <a href="javascript:void(0)"><i class="fas fa-times text-danger"
-                        wire:click="remove({{ $chat->id }})"></i></a> --}}
                 @if ($chat->image)
                     <img src="{{ asset("storage/{$chat->image}") }}" width="200" />
                 @endif
             </div>
+        @endforeach --}}
+        @foreach ($dates as $date => $chats)
+            <div class="rounded border shadow text-center py-1">
+                <div class="">{{ $date == now()->format('Y-m-d') ? 'Today' : $date }}</div>
+            </div>
+            @foreach ($chats as $chat)
+                @php
+                    if ($chat->the_receiver->id == auth()->id()) {
+                        $chat->read = 1;
+                        $chat->save();
+                    }
+                @endphp
+                <div class="rounded border shadow p-3 my-2 @if ($chat->the_sender->id == auth()->id()) bg-teal-green  @endif">
+                    <div class="d-flex float-right">
+                        <div class="flex-grow-1"></div>
+                        {{-- <p class="font-bold text-lg">{{ $chat->the_sender->name }}</p> --}}
+                        <small>{{ $chat->created_at->format('G:i') }} </small>
+                        @if ($chat->the_sender->id == auth()->id())
+                            @if ($chat->read == 1)
+                                <img src="{{ asset('images/double-check-seen.svg') }}" />
+                            @else
+                                <img src="{{ asset('images/double-check-unseen.svg') }}" />
+                            @endif
+                        @endif
+                    </div>
+                    <p class="text-gray-800">{{ $chat->text }}</p>
+                    {{-- <a href="javascript:void(0)"><i class="fas fa-times text-danger"
+                        wire:click="remove({{ $chat->id }})"></i></a> --}}
+                    @if ($chat->image)
+                        <img src="{{ asset("storage/{$chat->image}") }}" width="200" />
+                    @endif
+                </div>
+            @endforeach
         @endforeach
     </div>
 
