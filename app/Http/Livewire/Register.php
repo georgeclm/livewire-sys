@@ -26,7 +26,7 @@ class Register extends Component
 
         User::create($this->form);
         Auth::attempt(['email' => $this->form['email'], 'password' => $this->form['password']], true);
-        return redirect(route('login'));
+        return redirect(route('home'));
     }
 
     public function render()
