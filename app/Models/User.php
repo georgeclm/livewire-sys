@@ -45,4 +45,14 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    public function receive_chats()
+    {
+        return $this->hasMany(Chat::class, 'receiver');
+    }
+
+    public function sender_chats()
+    {
+        return $this->hasMany(Chat::class, 'sender');
+    }
 }

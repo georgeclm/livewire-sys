@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Register extends Component
@@ -19,11 +20,12 @@ class Register extends Component
     {
         $this->validate([
             'form.email'    => 'required|email|unique:users,email',
-            'form.name'     => 'required',
+            'form.name'     => 'required|unique:users,name',
             'form.password' => 'required|confirmed',
         ]);
 
         User::create($this->form);
+        Auth::attempt(['email' => $this->form['email'], 'password' => $this->form['password']], true);
         return redirect(route('login'));
     }
 

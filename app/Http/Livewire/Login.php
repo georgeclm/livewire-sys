@@ -19,8 +19,12 @@ class Login extends Component
             'form.password' => 'required',
         ]);
 
-        Auth::attempt($this->form);
-        return redirect(route('home'));
+        if (Auth::attempt($this->form)) {
+            return redirect(route('home'));
+        } else {
+            session()->flash('error', 'Alamat Email atau Password Anda salah!.');
+            return redirect(route('login'));
+        }
     }
     public function render()
     {

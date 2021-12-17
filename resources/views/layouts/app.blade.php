@@ -9,23 +9,29 @@
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Livewire Sys</title>
+    <title>Simple Chat App SPA</title>
     @livewireStyles
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
         data-turbolinks-eval="false"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    <style>
+        .bg-teal-green {
+            background-color: #128C7E !important;
+        }
+
+    </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Home</a>
+        <a class="navbar-brand" href="/">Chat App</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
+            <div class="navbar-nav mr-auto">
                 @auth
                     <livewire:logout />
                 @endauth
@@ -34,9 +40,14 @@
                     <a class="nav-item nav-link" href="/register">Register</a>
                 @endguest
             </div>
+            @auth
+                <span class="navbar-text">
+                    {{ auth()->user()->name }}
+                </span>
+            @endauth
         </div>
     </nav>
-    <div class="container my-5">
+    <div class="container">
         {{ $slot }}
     </div>
 
