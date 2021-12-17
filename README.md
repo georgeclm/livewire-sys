@@ -11,6 +11,9 @@
 
 This application use Laravel for the framework, bootstrap and pure blade for frontend, Livewire, and Turbolinks for the SPA system. This app you can chat with other user, check unread messages, last chat with other user just like Whatsapp.Simple App
 
+![alt text](https://github.com/georgeclm/livewire-sys/blob/main/public/images/chat-app.png?raw=true)
+
+
 ## To use the template
 
 1. **Clone the Repository**
