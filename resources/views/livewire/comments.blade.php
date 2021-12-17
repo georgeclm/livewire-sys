@@ -60,7 +60,7 @@
         @if ($image)
             <img src={{ $image }} height="50" />
         @endif
-        <input style="display:none;" type="file" id="image" wire:change="$emit('fileChoosen')">
+        <input style="display:none;" accept="image/*" type="file" id="image" wire:change="$emit('fileChoosen')">
     @endif
 </div>
 
