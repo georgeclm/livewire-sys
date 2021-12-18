@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     @if ($last_chat != null)
-                        {{ @$last_chat->created_at->toDateString() == now()->toDateString() ? $last_chat->created_at->format('G:i') : $transaction->created_at->format('Y-m-d') }}
+                        {{ @$last_chat->created_at->toDateString() == now()->toDateString() ? $last_chat->created_at->format('G:i') : $last_chat->created_at->format('Y-m-d') }}
                     @endif
                 </div>
             </div>
